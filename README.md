@@ -1,11 +1,11 @@
-# IAV24-Refugiate
+# IAV24-Refúgiate
 
 ## Autores
 - Alberto Peñalba Martos (albpenal)
 - Sofia Sánchez Fernández (sosanc03)
 
 ## Propuesta
-Este proyecto es una práctica de la asignatura de Inteligencia Artificial para Videojuegos del Grado en Desarrollo de Videojuegos de la UCM. La práctica consiste en desarrollar un prototipo de inteligencia artificial para videojuegos. Ambientado en un entorno de batalla, el juego consistirá en un soldado inteligente que intentara evitar o esquivar impactos de proyectiles, que tratarán de golpearlo, anticipándose a sus movimientos. Cabe la posibilidad de manejar al soldado por teclado o de que el soldado, a través de su inteligencia artificial, trate de sobrevivir por su cuenta. La implementación se llevará a cabo utilizando árboles de comportamiento complejos (behaviour bricks) y técnicas de búsqueda de caminos ().
+Este proyecto es una práctica de la asignatura de Inteligencia Artificial para Videojuegos del Grado en Desarrollo de Videojuegos de la UCM. La práctica consiste en desarrollar un prototipo de inteligencia artificial para videojuegos. Ambientado en un entorno de batalla, el juego consistirá en un soldado inteligente que intentara evitar o esquivar impactos de proyectiles, que tratarán de golpearlo, anticipándose a sus movimientos. Cabe la posibilidad de manejar al soldado por teclado o de que el soldado, a través de su inteligencia artificial, trate de sobrevivir por su cuenta. La implementación se llevará a cabo utilizando árboles de comportamiento complejos (behaviour bricks) y técnicas de búsqueda de caminos (algoritmo A*).
 
 ## Punto de partida
 Se partirá desde cero, utilizando un proyecto de Unity en la versión **Unity 2022.3.18f1**. Se buscarán assets de libre uso para el proyecto.
@@ -16,9 +16,9 @@ Se partirá desde cero, utilizando un proyecto de Unity en la versión **Unity 2
 
 ### Propiedades
 - `GameObject` vertexPrefab: Prefabricado de los vértices para visualización en el juego.
-- `List<Vertex>` vertices: Lista de vértices en la malla.
-- `bool[,]` mapVertices: Matriz que indica la conectividad de los vértices (si el vértice es seguro y accesible).
-- `float[,]` costsVertices: Matriz de costos de movimiento entre vértices.
+- `List<Vertex>` vertex: Lista de vértices en la malla.
+- `bool[,]` mapVertex: Matriz que indica la conectividad de los vértices (si el vértice es seguro y accesible).
+- `float[,]` costsVertex: Matriz de costos de movimiento entre vértices.
 - `int` numCols, `numRows`: Número de columnas y filas en la malla.
 
 ### Métodos
@@ -45,25 +45,25 @@ La clase `NavigationMesh` es esencial para la planificación de rutas y la naveg
 ***
 </details>
 
-## Clase `ProyectilGenerator`
+## Clase `ProjectileGenerator`
 <details>
 <summary>Implementación del cálculo de la posición en la que deben caer los proyectiles para tratar de golpear al soldado</summary>
 
 ### Propiedades
 - `GameObject` player: Acceso al soldado para calcular la posición del lanzamiento del proyectil.
 - `float` cooldown: Tiempo entre lanzamientos.
-- `int` nProyectiles: número de proyectiles a generar.
-- `List<Vector3>` posiciones: Lista de posiciones en las que ya se ha instanciado un proyectil.
+- `int` nProjectiles: número de proyectiles a generar.
+- `List<Vector3>` positions: Lista de posiciones en las que ya se ha instanciado un proyectil.
 
 ### Métodos
 #### `public void calculatePosition()`
 Cálculo de la posición a la que se lanzará un proyectil sin caer en la misma posición que otro.
 
-#### `public void generateProyectiles()`
+#### `public void generateProjectiles()`
 Instancia de un número de proyectiles dentro de un rango.
 
 ## Resumen
-La clase `ProyectilGenerator` será la clase encargada de lanzar proyectiles tratando de golpear al soldado (anticipandose a sus movimientos).
+La clase `ProjectileGenerator` será la clase encargada de lanzar proyectiles tratando de golpear al soldado (anticipandose a sus movimientos).
 ***
 </details>
 
