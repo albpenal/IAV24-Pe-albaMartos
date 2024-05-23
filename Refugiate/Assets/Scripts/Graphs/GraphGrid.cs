@@ -20,21 +20,15 @@ namespace UCM.IAV.Navegacion
     {
         const int MAX_TRIES = 1000;
 
-        public GameObject wallPrefab1;
-        public GameObject wallPrefab2;
-        public GameObject wallPrefab3;
+        [SerializeField]
+        private GameObject refuge;
+        [SerializeField]
+        private GameObject endPrefab;
 
-        public GameObject intersection3Prefab;
-        public GameObject intersection4Prefab;
-        public GameObject turnPrefab;
-
-        public GameObject endPrefab;
-        public GameObject pillarPrefab;
-
-        public GameObject obstaclePrefab;
-
-        public string mapsDir = "Maps"; // Directorio por defecto
-        public string mapName = "10x10.map"; // Fichero por defecto
+        [SerializeField]
+        private string mapsDir = "Maps"; // Directorio por defecto
+        [SerializeField]
+        private string mapName = "EscenaRefugiate.map"; // Fichero por defecto
         public bool get8Vicinity = false;
         public float cellSize = 1f;
         [Range(0, Mathf.Infinity)]
@@ -47,7 +41,7 @@ namespace UCM.IAV.Navegacion
 
         private void Awake()
         {
-            mapName = GameManager.instance.getSize() + ".map";
+            mapName = "EscenaRefugiate.map";
         }
 
         private int GridToId(int x, int y)
@@ -111,6 +105,7 @@ namespace UCM.IAV.Navegacion
                     }
 
                     //Generamos terreno
+                    Debug.Log(numRows + ", " + numCols);
                     for (i = 0; i < numRows; i++)
                     {
                         for (j = 0; j < numCols; j++)
@@ -275,62 +270,7 @@ namespace UCM.IAV.Navegacion
             GameObject floor = Instantiate(vertexPrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
             floor.transform.localScale *= cellSize;
             floor.name = floor.name.Replace("(Clone)", GridToId(j, i).ToString());
-
-            //Derecha, Izquierda, Arriba, Abajo
-            bool[] dirs = new bool[4] { i < numRows - 1 && !mapVertices[i+1, j], 
-                                        i > 0 && !mapVertices[i - 1, j], 
-                                        j < numCols - 1 && !mapVertices[i, j + 1], 
-                                        j > 0 && !mapVertices[i, j - 1] };
-
-            int connec = 0;
-            for (int index = 0; index < dirs.Length; index++)
-                if (dirs[index]) connec++;
-
-            //Interseccion en 4
-            if (dirs[0] && dirs[1] && dirs[2] && dirs[3])
-                return Instantiate(intersection4Prefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
-
-            //Interseccion en 3
-            if (dirs[0] && dirs[1] && dirs[2])
-                return Instantiate(intersection3Prefab, position, Quaternion.Euler(0, 90, 0), this.gameObject.transform) as GameObject;
-            if (dirs[0] && dirs[1] && dirs[3])
-                return Instantiate(intersection3Prefab, position, Quaternion.Euler(0, 270, 0), this.gameObject.transform) as GameObject;
-            if (dirs[0] && dirs[2] && dirs[3])
-                return Instantiate(intersection3Prefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
-            if (dirs[1] && dirs[2] && dirs[3])
-                return Instantiate(intersection3Prefab, position, Quaternion.Euler(0, 180, 0), this.gameObject.transform) as GameObject;
-
-            //Interseccion muro
-            if(dirs[0] && dirs[1])
-                return Instantiate(wallPrefab1, position, Quaternion.Euler(0,90,0), this.gameObject.transform) as GameObject;
-            if (dirs[2] && dirs[3])
-                return Instantiate(wallPrefab1, position, Quaternion.identity, this.gameObject.transform) as GameObject;
-            
-            //Interseccion en giro
-            if (dirs[0] && dirs[2])
-                return Instantiate(turnPrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
-            if (dirs[0] && dirs[3])
-                return Instantiate(turnPrefab, position, Quaternion.Euler(0, 270, 0), this.gameObject.transform) as GameObject;
-            if (dirs[1] && dirs[2])
-                return Instantiate(turnPrefab, position, Quaternion.Euler(0, 90, 0), this.gameObject.transform) as GameObject;
-            if (dirs[1] && dirs[3])
-                return Instantiate(turnPrefab, position, Quaternion.Euler(0, 180, 0), this.gameObject.transform) as GameObject;
-            
-            //Muro libre
-            if (!dirs[0] && !dirs[1] && !dirs[2] && !dirs[3])
-                return Instantiate(pillarPrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
-
-            //Laterales
-            if (dirs[0])
-                return Instantiate(endPrefab, position, Quaternion.Euler(0, 90, 0), this.gameObject.transform) as GameObject;
-            if (dirs[1])
-                return Instantiate(endPrefab, position, Quaternion.Euler(0, 270, 0), this.gameObject.transform) as GameObject;
-            if (dirs[2])
-                return Instantiate(endPrefab, position, Quaternion.Euler(0, 180, 0), this.gameObject.transform) as GameObject;
-            if (dirs[3])
-                return Instantiate(endPrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
-
-            return Instantiate(obstaclePrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
+            return Instantiate(refuge, position, Quaternion.identity, this.gameObject.transform) as GameObject;
         }
 
     }

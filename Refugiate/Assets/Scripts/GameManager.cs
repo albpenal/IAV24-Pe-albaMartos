@@ -26,7 +26,7 @@ namespace UCM.IAV.Movimiento
         Text heuristicText;
         Text label;
         Text label2;
-        string mazeSize = "10x10";
+        string mazeSize = "30x15";
 
         private int frameRate = 60;
         TheseusGraph theseusGraph;
@@ -133,7 +133,7 @@ namespace UCM.IAV.Movimiento
                 label = GameObject.FindGameObjectWithTag("DDLabel").GetComponent<Text>();
                 label2 = GameObject.FindGameObjectWithTag("MinoLabel").GetComponent<Text>();
             }
-            else if (SceneManager.GetActiveScene().name == "Labyrinth") // Nombre de escena que habría que llevar a una constante
+            else if (SceneManager.GetActiveScene().name == "Refugiate") // Nombre de escena que habría que llevar a una constante
             {
                 fRText = GameObject.FindGameObjectWithTag("Framerate").GetComponent<Text>();
                 heuristicText = GameObject.FindGameObjectWithTag("Heuristic").GetComponent<Text>();
