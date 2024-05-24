@@ -2098,6 +2098,57 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1792461722}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1757560737
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1757560739}
+  - component: {fileID: 1757560738}
+  m_Layer: 0
+  m_Name: ProjectileSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1757560738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1757560737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 780a2ac3b45238f429422ce3af644a54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 4429126820074277128, guid: f0a72d53cec1c5446ad246f8e7e1c33b,
+    type: 3}
+  player: {fileID: 2104739406}
+  forwardOffset: 1
+  spawnRadius: 2
+  maxAdditionalProjectiles: 0
+  projectileHeight: 20
+--- !u!4 &1757560739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1757560737}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17.4588, y: 5.986666, z: 12.20495}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1757951266
 GameObject:
   m_ObjectHideFlags: 0
@@ -3104,6 +3155,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3274a75cff2d2de4580a81dd713edc37, type: 3}
+--- !u!1 &2104739406 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5587432493576105249, guid: c391d0bafd410864ca5d0cc1bd083ed3,
+    type: 3}
+  m_PrefabInstance: {fileID: 118918808}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3120,3 +3177,4 @@ SceneRoots:
   - {fileID: 2043165559}
   - {fileID: 118918808}
   - {fileID: 743667933}
+  - {fileID: 1757560739}

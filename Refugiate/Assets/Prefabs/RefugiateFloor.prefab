@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6063515238921986063}
   - component: {fileID: 8834049221007804213}
   - component: {fileID: 5320411112385837082}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2260716792712808639}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RefugiateFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
