@@ -49,7 +49,7 @@ namespace UCM.IAV.Navegacion
             return Math.Max(numRows, numCols) * y + x;
         }
 
-        private Vector2 IdToGrid(int id)
+        public Vector2 IdToGrid(int id)
         {
             Vector2 location = Vector2.zero;
             location.y = Mathf.Floor(id / numCols);
@@ -273,5 +273,9 @@ namespace UCM.IAV.Navegacion
             return Instantiate(refuge, position, Quaternion.identity, this.gameObject.transform) as GameObject;
         }
 
+        public bool isGround(Vector2 locationCell)
+        {
+            return (mapVertices[(int)locationCell.y, (int)locationCell.x]);
+        }
     }
 }

@@ -15,6 +15,7 @@ TagManager:
   - DDLabel
   - MinoLabel
   - Column
+  - GraphGrid
   layers:
   - Default
   - TransparentFX

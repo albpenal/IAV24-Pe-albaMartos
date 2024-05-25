@@ -370,6 +370,8 @@
 "Assets/Scripts/Graphs/GraphGrid.cs"
 "Assets/Scripts/Graphs/TheseusGraph.cs"
 "Assets/Scripts/Graphs/Vertex.cs"
+"Assets/Scripts/Projectile.cs"
+"Assets/Scripts/ProjectileSpawner.cs"
 -langversion:9.0
 
 /deterministic

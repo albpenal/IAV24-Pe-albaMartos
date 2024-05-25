@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UCM.IAV.Navegacion;
 
 public class ProjectileSpawner : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class ProjectileSpawner : MonoBehaviour
     private int maxAdditionalProjectiles = 4; // Máximo número de proyectiles adicionales
     [SerializeField]
     private int projectileHeight = 20; // Altura en la que hacen spawn los proyectiles
+    [SerializeField]
+    private float cellSize = 1f; // Tamaño de las celdas en la cuadrícula
     void Update()
     {
         // Spawnear proyectil al presionar la tecla espacio
@@ -30,6 +33,7 @@ public class ProjectileSpawner : MonoBehaviour
         // Posición del primer proyectil con un pequeño offset hacia adelante
         Vector3 spawnPosition = player.transform.position + player.transform.forward * forwardOffset;
         spawnPosition.y += projectileHeight;
+        spawnPosition = AdjustToGridCenter(spawnPosition);
         Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
 
         // Número aleatorio de proyectiles adicionales
@@ -41,8 +45,15 @@ public class ProjectileSpawner : MonoBehaviour
             Vector3 randomOffset = Random.insideUnitSphere * spawnRadius;
             randomOffset.y = 0; // Mantener los proyectiles en el plano horizontal
             Vector3 additionalSpawnPosition = spawnPosition + randomOffset;
-            additionalSpawnPosition.y += projectileHeight;
+            additionalSpawnPosition = AdjustToGridCenter(additionalSpawnPosition);
             Instantiate(projectilePrefab, additionalSpawnPosition, Quaternion.identity);
         }
+    }
+
+    Vector3 AdjustToGridCenter(Vector3 position)
+    {
+        position.x = Mathf.Round(position.x / cellSize) * cellSize;
+        position.z = Mathf.Round(position.z / cellSize) * cellSize;
+        return position;
     }
 }

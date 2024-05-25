@@ -2132,8 +2132,9 @@ MonoBehaviour:
   player: {fileID: 2104739406}
   forwardOffset: 1
   spawnRadius: 2
-  maxAdditionalProjectiles: 0
-  projectileHeight: 20
+  maxAdditionalProjectiles: 4
+  projectileHeight: 11
+  cellSize: 1
 --- !u!4 &1757560739
 Transform:
   m_ObjectHideFlags: 0
@@ -2813,7 +2814,7 @@ GameObject:
   - component: {fileID: 1942211753}
   m_Layer: 6
   m_Name: GraphGrid
-  m_TagString: Wall
+  m_TagString: GraphGrid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
