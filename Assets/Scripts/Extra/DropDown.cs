@@ -14,12 +14,12 @@ using UnityEngine;
 
 public class DropDown : MonoBehaviour
 {
-    public bool mino = false;
+    public bool gameMode = false;
     void Start()
     {
        // Establece changeSize al OnValueChanged del Dropdown
-        if(!mino)
-            gameObject.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { UCM.IAV.Movimiento.GameManager.instance.ChangeSize(); });
+        if(!gameMode)
+            gameObject.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { UCM.IAV.Movimiento.GameManager.instance.ChangeName(); });
        else
             gameObject.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { UCM.IAV.Movimiento.GameManager.instance.setNumMinos(); });
 

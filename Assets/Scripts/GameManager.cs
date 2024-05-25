@@ -26,7 +26,7 @@ namespace UCM.IAV.Movimiento
         Text heuristicText;
         Text label;
         Text label2;
-        string mazeSize = "30x15";
+        string mapName = "Map1";
 
         private int frameRate = 60;
         TheseusGraph theseusGraph;
@@ -203,13 +203,13 @@ namespace UCM.IAV.Movimiento
             }
         }
 
-        public void ChangeSize()
+        public void ChangeName()
         {
-            mazeSize = label.text;
+            mapName = label.text;
         }
-        public string getSize()
+        public string getName()
         {
-            return mazeSize;
+            return mapName;
         }
     }
 }

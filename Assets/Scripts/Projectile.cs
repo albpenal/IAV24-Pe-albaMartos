@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UCM.IAV.Navegacion;
+using static UnityEditor.PlayerSettings;
 
 public class Projectile : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class Projectile : MonoBehaviour
         {
             if (impacto != null)
             {
+                graphGrid_.UpdateVertexCost(impacto.transform.position, -100);
                 Destroy(impacto);
             }
         }
@@ -50,7 +52,7 @@ public class Projectile : MonoBehaviour
 
     private void Start()
     {
-        //graphGrid_ = GameObject.Find("GraphGrid").GetComponent<GraphGrid>();
+        graphGrid_ = GameObject.Find("GraphGrid").GetComponent<GraphGrid>();
         InstantiateImpactPrefabs();
     }
 
@@ -82,6 +84,7 @@ public class Projectile : MonoBehaviour
                                 pos.y = 0f;
                                 GameObject impactoInstance = Instantiate(impacto, pos, Quaternion.identity);
                                 impactoPrefabs.Add(impactoInstance); // Agregar el prefab a la lista
+                                graphGrid_.UpdateVertexCost(pos, 100);
                             }
                         }
                     }

@@ -22,26 +22,25 @@ namespace UCM.IAV.Navegacion
 
         [SerializeField]
         private GameObject refuge;
-        [SerializeField]
-        private GameObject endPrefab;
 
         [SerializeField]
         private string mapsDir = "Maps"; // Directorio por defecto
-        [SerializeField]
-        private string mapName = "EscenaRefugiate.map"; // Fichero por defecto
+        private string mapName = "Map1.map"; // Fichero por defecto
         public bool get8Vicinity = false;
         public float cellSize = 1f;
         [Range(0, Mathf.Infinity)]
         public float defaultCost = 1f;
         [Range(0, Mathf.Infinity)]
         public float maximumCost = Mathf.Infinity;
+        private Vector2 salida;
 
 
         GameObject[] vertexObjs;
 
         private void Awake()
         {
-            mapName = "EscenaRefugiate.map";
+            mapName = GameManager.instance.getName() + ".map";
+            Debug.Log(mapName);
         }
 
         private int GridToId(int x, int y)
@@ -95,7 +94,10 @@ namespace UCM.IAV.Navegacion
                         {
                             bool isGround = true;
                             if (line[j] == 'e')
+                            {
                                 GameManager.instance.SetExit(j, i, cellSize);
+                                salida = new Vector2(i, j);
+                            }   
                             else if (line[j] == 's')
                                 GameManager.instance.SetStart(j, i, cellSize);
                             else if (line[j] == 'T')
@@ -250,17 +252,11 @@ namespace UCM.IAV.Navegacion
 
             Vector2 gridPos = IdToGrid(v.id);
 
-            int x = (int) gridPos.y;
-            int y = (int) gridPos.x;
-
+            int x = (int)gridPos.y;
+            int y = (int)gridPos.x;
 
             if (x > 0 && x < numRows - 1 && y > 0 && y < numCols - 1)
-                costsVertices[x, y] = defaultCost * costMultiplier * costMultiplier;
-
-            if(x > 0) costsVertices[x - 1, y] = defaultCost * costMultiplier;
-            if(x < numRows - 1) costsVertices[x + 1, y] = defaultCost * costMultiplier;
-            if(y > 0) costsVertices[x, y - 1] = defaultCost * costMultiplier;
-            if(y < numCols - 1) costsVertices[x, y + 1] = defaultCost * costMultiplier;
+                costsVertices[x, y] += costMultiplier;
 
         }
 
@@ -276,6 +272,11 @@ namespace UCM.IAV.Navegacion
         public bool isGround(Vector2 locationCell)
         {
             return (mapVertices[(int)locationCell.y, (int)locationCell.x]);
+        }
+
+        public bool salidaSave()
+        {
+            return costsVertices[(int)salida.x, (int)salida.y] <= 1;
         }
     }
 }
