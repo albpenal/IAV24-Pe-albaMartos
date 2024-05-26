@@ -13,10 +13,14 @@ TagManager:
   - Exit
   - Start
   - DDLabel
-  - MinoLabel
   - Column
   - GraphGrid
-  - GameOver
+  - Left
+  - Right
+  - GameOverBackground
+  - victory
+  - IA
+  - Life
   layers:
   - Default
   - TransparentFX

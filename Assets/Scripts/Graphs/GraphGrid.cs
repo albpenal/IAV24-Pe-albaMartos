@@ -263,6 +263,17 @@ namespace UCM.IAV.Navegacion
 
         }
 
+        public int getVertexCost(Vector3 position)
+        {
+            Vertex v = GetNearestVertex(position);
+
+            Vector2 gridPos = IdToGrid(v.id);
+
+            int x = (int)gridPos.y;
+            int y = (int)gridPos.x;
+            return (int)costsVertices[x, y];
+        }
+
         private GameObject WallInstantiate(Vector3 position, int i, int j)
         {
             //Suelo base e independiente

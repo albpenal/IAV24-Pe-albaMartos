@@ -79,14 +79,14 @@ namespace UCM.IAV.Navegacion
             hilo = GetComponent<LineRenderer>();
             ariadna = false;
 
-            hilo.startWidth = 0.15f;
-            hilo.endWidth = 0.15f;
+            hilo.startWidth = 0f;
+            hilo.endWidth = 0f;
             hilo.positionCount = 0;
         }
 
         // Update is called once per frame
         public virtual void Update() {
-            if (Input.GetKey(KeyCode.Space)) {
+            if (GameManager.instance.IA) {
                 if (!ariadna)
                     updateAriadna(true);
             }

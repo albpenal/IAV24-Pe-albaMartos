@@ -22,11 +22,9 @@ namespace UCM.IAV.Movimiento
         public static GameManager instance = null;
 
         // Textos UI
-        Text fRText;
-        Text heuristicText;
         Text label;
         Text label2;
-        Text GameOverText;
+        Text life;
         string mapName = "Map1";
 
         private int frameRate = 60;
@@ -43,11 +41,15 @@ namespace UCM.IAV.Movimiento
         GameObject player = null;
         GameObject exitSlab = null;
         GameObject startSlab = null;
+        Image GameOverBack;
+        Image victory;
 
         GameObject exit = null;
         GameObject temporalExit = null;
 
-        int numMinos = 1;
+        public bool IA = false;
+
+        public bool gameOver;
 
         private void Awake()
         {
@@ -68,6 +70,8 @@ namespace UCM.IAV.Movimiento
             Application.targetFrameRate = frameRate;
 
             FindGO();
+            gameOver = false;
+            IA = false;
         }
 
         // Lo primero que se llama al activarse (tras el Awake)
@@ -99,33 +103,30 @@ namespace UCM.IAV.Movimiento
         // Update is called once per frame
         void Update()
         {
-            // Timer para mostrar el frameRate a intervalos
-            if (m_timeCounter < m_refreshTime)
+            if (!gameOver)
             {
-                m_timeCounter += Time.deltaTime;
-                m_frameCounter++;
+                // Timer para mostrar el frameRate a intervalos
+                if (m_timeCounter < m_refreshTime)
+                {
+                    m_timeCounter += Time.deltaTime;
+                    m_frameCounter++;
+                }
+                else
+                {
+                    m_lastFramerate = (float)m_frameCounter / m_timeCounter;
+                    m_frameCounter = 0;
+                    m_timeCounter = 0.0f;
+                }
+
+                if (player != null && (player.transform.position - exit.transform.position).magnitude < 0.5f)
+                    Victory();
+                if (life != null)
+                    life.text = "Vida: " + ((int)player.GetComponent<PlayerLife>().getLife()).ToString();
+
+                //Input
+                if (Input.GetKeyDown(KeyCode.R))
+                    RestartScene();
             }
-            else
-            {
-                m_lastFramerate = (float)m_frameCounter / m_timeCounter;
-                m_frameCounter = 0;
-                m_timeCounter = 0.0f;
-            }
-
-            // Texto con el framerate y 2 decimales
-            if (fRText != null)
-                fRText.text = (((int)(m_lastFramerate * 100 + .5) / 100.0)).ToString();
-
-            if (player != null && (player.transform.position - exit.transform.position).magnitude < 0.5f)
-                goToScene("Menu");
-
-            //Input
-            if (Input.GetKeyDown(KeyCode.R))
-                RestartScene();
-            if (Input.GetKeyDown(KeyCode.F))
-                ChangeFrameRate();
-            if (Input.GetKeyDown(KeyCode.C))
-                heuristicText.text = theseusGraph.ChangeHeuristic();
         }
 
         private void FindGO()
@@ -133,18 +134,19 @@ namespace UCM.IAV.Movimiento
             if (SceneManager.GetActiveScene().name == "Menu") // Nombre de escena que habría que llevar a una constante
             {
                 label = GameObject.FindGameObjectWithTag("DDLabel").GetComponent<Text>();
-                label2 = GameObject.FindGameObjectWithTag("MinoLabel").GetComponent<Text>();
+                label2 = GameObject.FindGameObjectWithTag("IA").GetComponent<Text>();
             }
             else if (SceneManager.GetActiveScene().name == "Refugiate") // Nombre de escena que habría que llevar a una constante
             {
-                fRText = GameObject.FindGameObjectWithTag("Framerate").GetComponent<Text>();
-                heuristicText = GameObject.FindGameObjectWithTag("Heuristic").GetComponent<Text>();
                 theseusGraph = GameObject.FindGameObjectWithTag("TesterGraph").GetComponent<TheseusGraph>();
                 exitSlab = GameObject.FindGameObjectWithTag("Exit");
                 startSlab = GameObject.FindGameObjectWithTag("Start");
                 player = GameObject.Find("Avatar");
-                GameOverText = GameObject.FindGameObjectWithTag("GameOver").GetComponent<Text>();
-                GameOverText.enabled = false;
+                life = GameObject.FindGameObjectWithTag("Life").GetComponent<Text>();
+                GameOverBack = GameObject.FindGameObjectWithTag("GameOverBackground").GetComponent<Image>();
+                GameOverBack.enabled = false;
+                victory = GameObject.FindGameObjectWithTag("victory").GetComponent<Image>();
+                victory.enabled = false;
             }
         }
 
@@ -160,14 +162,9 @@ namespace UCM.IAV.Movimiento
         }
 
 
-        public void setNumMinos()
+        public void setIA()
         {
-            numMinos = int.Parse(label2.text);
-        }
-
-        public int getNumMinos()
-        {
-            return numMinos;
+            IA = (label2.text == "IA");
         }
 
         public void goToScene(string scene)
@@ -223,10 +220,35 @@ namespace UCM.IAV.Movimiento
         {
             temporalExit.transform.position = pos;
         }
+        private void Victory()
+        {
+            victory.enabled = true;
+            //life.enabled = false;
+            player.SetActive(false);
+            gameOver = true;
+            GameObject.FindGameObjectWithTag("Left").SetActive(false);
+            GameObject.FindGameObjectWithTag("Right").SetActive(false);
 
+            StartCoroutine(WaitAndLoadMenu());
+        }
         public void GameOver()
         {
-            GameOverText.enabled = true;
+            GameOverBack.enabled = true;
+            //life.enabled = false;
+            player.SetActive(false);
+            gameOver = true;
+            GameObject.FindGameObjectWithTag("Left").SetActive(false);
+            GameObject.FindGameObjectWithTag("Right").SetActive(false);
+
+            StartCoroutine(WaitAndLoadMenu());
+        }
+
+        private IEnumerator WaitAndLoadMenu()
+        {
+            yield return new WaitForSeconds(3);
+            gameOver = false;
+            IA = false;
+            goToScene("Menu");
         }
     }
 }

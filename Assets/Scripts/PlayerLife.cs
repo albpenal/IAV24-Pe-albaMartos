@@ -7,17 +7,6 @@ public class PlayerLife : MonoBehaviour
 {
     [SerializeField]
     private int life = 100;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void Damage(int dam)
     {
@@ -28,5 +17,10 @@ public class PlayerLife : MonoBehaviour
             // setear texto de derrota y volver al menú 
             GameManager.instance.GameOver();
         }
+    }
+    
+    public int getLife()
+    {
+        return life;
     }
 }

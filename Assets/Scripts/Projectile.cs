@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UCM.IAV.Navegacion;
 using static UnityEditor.PlayerSettings;
+using UCM.IAV.Movimiento;
 
 public class Projectile : MonoBehaviour
 {
@@ -29,12 +30,19 @@ public class Projectile : MonoBehaviour
         {
             // Obtener el rigidbody de los objetos cercanos
             Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
+            PlayerLife playerLife = nearbyObject.GetComponent<PlayerLife>();
             if (rb != null)
             {
                 // Aplicar fuerza de explosión si no hay una pared en medio
                 if (!IsBlockedByWall(transform.position, rb.position))
                 {
                     rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+                    // Si el objeto tiene el componente PlayerLife, aplicar daño
+                    if (playerLife != null)
+                    {
+                        int damage = graphGrid_.getVertexCost(transform.position)/10; 
+                        playerLife.Damage(damage);
+                    }
                 }
             }
         }
@@ -97,5 +105,18 @@ public class Projectile : MonoBehaviour
     {
         // Comprobar si hay una pared entre el centro de la explosión y el punto de impacto
         return Physics.Raycast(start, end - start, out RaycastHit hit, Vector3.Distance(start, end)) && hit.collider.tag == "Column";
+    }
+
+    private void Update()
+    {
+        if (GameManager.instance.gameOver || transform.position.y < -20)
+        {
+            foreach (GameObject impacto in impactoPrefabs)
+            {
+                if (impacto != null)  Destroy(impacto);
+            }
+            // Destruir el proyectil
+            Destroy(gameObject);
+        }
     }
 }
