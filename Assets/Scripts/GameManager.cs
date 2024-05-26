@@ -26,6 +26,7 @@ namespace UCM.IAV.Movimiento
         Text heuristicText;
         Text label;
         Text label2;
+        Text GameOverText;
         string mapName = "Map1";
 
         private int frameRate = 60;
@@ -141,6 +142,8 @@ namespace UCM.IAV.Movimiento
                 exitSlab = GameObject.FindGameObjectWithTag("Exit");
                 startSlab = GameObject.FindGameObjectWithTag("Start");
                 player = GameObject.Find("Avatar");
+                GameOverText = GameObject.FindGameObjectWithTag("GameOver").GetComponent<Text>();
+                GameOverText.enabled = false;
             }
         }
 
@@ -210,6 +213,16 @@ namespace UCM.IAV.Movimiento
         public string getName()
         {
             return mapName;
+        }
+
+        public void setExit(Vector3 pos)
+        {
+            exit.transform.position = pos;
+        }
+
+        public void GameOver()
+        {
+            GameOverText.enabled = true;
         }
     }
 }

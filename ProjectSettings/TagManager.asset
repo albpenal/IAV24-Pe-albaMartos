@@ -16,6 +16,7 @@ TagManager:
   - MinoLabel
   - Column
   - GraphGrid
+  - GameOver
   layers:
   - Default
   - TransparentFX

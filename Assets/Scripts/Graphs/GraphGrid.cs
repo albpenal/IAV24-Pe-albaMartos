@@ -33,6 +33,7 @@ namespace UCM.IAV.Navegacion
         [Range(0, Mathf.Infinity)]
         public float maximumCost = Mathf.Infinity;
         private Vector2 salida;
+        private bool exitOriginalPos;
 
 
         GameObject[] vertexObjs;
@@ -41,6 +42,7 @@ namespace UCM.IAV.Navegacion
         {
             mapName = GameManager.instance.getName() + ".map";
             Debug.Log(mapName);
+            exitOriginalPos = true;
         }
 
         private int GridToId(int x, int y)
@@ -276,7 +278,34 @@ namespace UCM.IAV.Navegacion
 
         public bool salidaSave()
         {
+            Debug.Log(costsVertices[(int)salida.x, (int)salida.y]);
             return costsVertices[(int)salida.x, (int)salida.y] <= 1;
+        }
+
+        public void resetExit()
+        {
+            if (!exitOriginalPos)
+            {
+                Vector3 pos = new Vector3(salida.x, 0, salida.y);
+                GameManager.instance.setExit(pos);
+                exitOriginalPos = true;
+            }
+        }
+
+        public void setExit()
+        {
+            if (exitOriginalPos)
+            {
+                GameObject gameObj;
+                do
+                {
+                    gameObj = GetRandomPos();
+                } while (costsVertices[(int)IdToGrid(GetNearestVertex(gameObj.transform.position).id).x,
+                (int)IdToGrid(GetNearestVertex(gameObj.transform.position).id).y] != 1);
+
+                GameManager.instance.setExit(gameObj.transform.position);
+                exitOriginalPos= false;
+            }
         }
     }
 }

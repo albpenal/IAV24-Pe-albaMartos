@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UCM.IAV.Navegacion;
 
 public class ProjectileSpawner : MonoBehaviour
 {
