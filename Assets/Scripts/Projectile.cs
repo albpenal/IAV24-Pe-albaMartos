@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UCM.IAV.Navegacion;
-using static UnityEditor.PlayerSettings;
 using UCM.IAV.Movimiento;
 
 public class Projectile : MonoBehaviour
