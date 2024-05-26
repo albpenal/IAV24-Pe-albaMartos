@@ -45,6 +45,7 @@ namespace UCM.IAV.Movimiento
         GameObject startSlab = null;
 
         GameObject exit = null;
+        GameObject temporalExit = null;
 
         int numMinos = 1;
 
@@ -176,7 +177,7 @@ namespace UCM.IAV.Movimiento
 
         public GameObject GetExitNode()
         {
-            return exit;
+            return temporalExit;
         }
 
         public void SetExit(int i, int j, float size)
@@ -184,6 +185,9 @@ namespace UCM.IAV.Movimiento
             exit = new GameObject(); exit.name = "Exit";
             exit.transform.position = new Vector3(i * size, 0, j * size);
             exitSlab.transform.position = new Vector3(i * size, 0.3f, j * size);
+            temporalExit = new GameObject();
+            temporalExit.transform.position = new Vector3(i * size, 0, j * size);
+            temporalExit.transform.position = new Vector3(i * size, 0.3f, j * size);
         }
 
         public void SetStart(int i, int j, float size)
@@ -217,7 +221,7 @@ namespace UCM.IAV.Movimiento
 
         public void setExit(Vector3 pos)
         {
-            exit.transform.position = pos;
+            temporalExit.transform.position = pos;
         }
 
         public void GameOver()

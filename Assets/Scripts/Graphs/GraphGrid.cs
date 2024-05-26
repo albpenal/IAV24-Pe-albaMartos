@@ -21,6 +21,9 @@ namespace UCM.IAV.Navegacion
         const int MAX_TRIES = 1000;
 
         [SerializeField]
+        private GameObject player;
+
+        [SerializeField]
         private GameObject refuge;
 
         [SerializeField]
@@ -41,7 +44,6 @@ namespace UCM.IAV.Navegacion
         private void Awake()
         {
             mapName = GameManager.instance.getName() + ".map";
-            Debug.Log(mapName);
             exitOriginalPos = true;
         }
 
@@ -109,7 +111,6 @@ namespace UCM.IAV.Navegacion
                     }
 
                     //Generamos terreno
-                    Debug.Log(numRows + ", " + numCols);
                     for (i = 0; i < numRows; i++)
                     {
                         for (j = 0; j < numCols; j++)
@@ -278,7 +279,6 @@ namespace UCM.IAV.Navegacion
 
         public bool salidaSave()
         {
-            Debug.Log(costsVertices[(int)salida.x, (int)salida.y]);
             return costsVertices[(int)salida.x, (int)salida.y] <= 1;
         }
 
@@ -304,7 +304,13 @@ namespace UCM.IAV.Navegacion
                 (int)IdToGrid(GetNearestVertex(gameObj.transform.position).id).y] != 1);
 
                 GameManager.instance.setExit(gameObj.transform.position);
-                exitOriginalPos= false;
+                exitOriginalPos = false;
+            }
+            if (costsVertices[(int)IdToGrid(GetNearestVertex(player.transform.position).id).x,
+                (int)IdToGrid(GetNearestVertex(player.transform.position).id).y] == 1)
+            {
+                GameManager.instance.setExit(player.transform.position);
+                if (salidaSave()) exitOriginalPos = false;
             }
         }
     }

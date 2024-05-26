@@ -24,7 +24,6 @@ namespace BBCore.Conditions
         /// <returns>true if the exit is save, false if it is not.</returns>
         public override bool Check()
         {
-            Debug.Log(myGraphGrid.salidaSave());
             return myGraphGrid.salidaSave();
         }
     }

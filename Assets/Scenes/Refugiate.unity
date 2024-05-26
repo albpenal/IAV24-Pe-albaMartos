@@ -1826,6 +1826,7 @@ MonoBehaviour:
   vertexPrefab: {fileID: 6829005932531774690, guid: a7283edc6f8b3f84083a0fc201cd5c9f,
     type: 3}
   path: []
+  player: {fileID: 2104739406}
   refuge: {fileID: 385804149555000057, guid: 13112437231599044b9b2043a87d978e, type: 3}
   mapsDir: Maps
   get8Vicinity: 0
