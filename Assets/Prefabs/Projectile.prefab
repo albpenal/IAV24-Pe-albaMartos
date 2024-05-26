@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionRadius: 2
-  explosionForce: 700
+  explosionForce: 1000
   impacto: {fileID: 1607255337374147454, guid: f22ca746fec639e42991f74931167d23, type: 3}
 --- !u!1 &6675727755942989566
 GameObject:

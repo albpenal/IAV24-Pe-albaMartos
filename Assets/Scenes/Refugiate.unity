@@ -1444,8 +1444,8 @@ MonoBehaviour:
   maxAdditionalProjectiles: 3
   projectileHeight: 20
   cellSize: 1
-  minSpawnInterval: 1
-  maxSpawnInterval: 2
+  minSpawnInterval: 1.5
+  maxSpawnInterval: 2.5
 --- !u!4 &1757560739
 Transform:
   m_ObjectHideFlags: 0
