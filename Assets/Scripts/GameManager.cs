@@ -27,6 +27,18 @@ namespace UCM.IAV.Movimiento
         Text life;
         string mapName = "Map1";
 
+        [SerializeField]
+        private AudioSource explosion;
+
+        [SerializeField]
+        private AudioSource menuMusic;
+
+        [SerializeField]
+        private AudioSource gameOverMusic;
+
+        [SerializeField]
+        private AudioSource victoryMusic;
+
         private int frameRate = 60;
         TheseusGraph theseusGraph;
 
@@ -58,10 +70,16 @@ namespace UCM.IAV.Movimiento
             {
                 instance = this;
                 DontDestroyOnLoad(this.gameObject);
+                
             }
             else
             {
                 Destroy(this.gameObject);
+                return;
+            }
+            if (SceneManager.GetActiveScene().name == "Menu")
+            {
+                menuMusic.Play();
             }
         }
 
@@ -147,6 +165,7 @@ namespace UCM.IAV.Movimiento
                 GameOverBack.enabled = false;
                 victory = GameObject.FindGameObjectWithTag("victory").GetComponent<Image>();
                 victory.enabled = false;
+                menuMusic.Stop();
             }
         }
 
@@ -169,6 +188,10 @@ namespace UCM.IAV.Movimiento
 
         public void goToScene(string scene)
         {
+            if (scene == "Menu")
+            {
+                menuMusic.Play();
+            }
             SceneManager.LoadScene(scene);
         }
 
@@ -222,6 +245,7 @@ namespace UCM.IAV.Movimiento
         }
         private void Victory()
         {
+            victoryMusic.Play();
             victory.enabled = true;
             //life.enabled = false;
             player.SetActive(false);
@@ -233,6 +257,7 @@ namespace UCM.IAV.Movimiento
         }
         public void GameOver()
         {
+            gameOverMusic.Play();
             GameOverBack.enabled = true;
             //life.enabled = false;
             player.SetActive(false);
@@ -249,6 +274,11 @@ namespace UCM.IAV.Movimiento
             gameOver = false;
             IA = false;
             goToScene("Menu");
+        }
+
+        public void PlayExplosion()
+        {
+            explosion.Play();
         }
     }
 }

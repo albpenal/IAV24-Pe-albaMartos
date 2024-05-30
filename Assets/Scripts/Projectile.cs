@@ -12,6 +12,9 @@ public class Projectile : MonoBehaviour
     private float explosionForce = 700.0f; // Fuerza de la explosión
     [SerializeField]
     private GameObject impacto; // Efecto visual de la explosión
+    [SerializeField]
+    private AudioSource launch; // Sonido en instanciación
+
     private GraphGrid graphGrid_; // Referencia al graphGrid
     private List<GameObject> impactoPrefabs = new List<GameObject>(); // Lista para almacenar los prefabs de impacto
 
@@ -22,6 +25,7 @@ public class Projectile : MonoBehaviour
 
     void Explode()
     {
+        GameManager.instance.PlayExplosion();
         // Obtener todos los colliders en el radio de la explosión
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
 
@@ -59,6 +63,7 @@ public class Projectile : MonoBehaviour
 
     private void Start()
     {
+        launch.Play();
         graphGrid_ = GameObject.Find("GraphGrid").GetComponent<GraphGrid>();
         InstantiateImpactPrefabs();
     }

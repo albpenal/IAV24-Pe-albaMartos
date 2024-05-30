@@ -8,8 +8,19 @@ public class PlayerLife : MonoBehaviour
     [SerializeField]
     private int life = 100;
 
+    [SerializeField]
+    private AudioSource hitSound;
+
+    [SerializeField]
+    private AudioSource gameMusic;
+
+    private void Awake()
+    {
+        gameMusic.Play();
+    }
     public void Damage(int dam)
     {
+        hitSound.Play();
         life -= dam;
         if(life <= 0)
         {

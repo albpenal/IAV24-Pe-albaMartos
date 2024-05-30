@@ -26,6 +26,6 @@ public class PlayerAnimator : MonoBehaviour
     void Update()
     {
         if(rigidbody.velocity.magnitude >= 0)
-            animator.SetInteger("speed", (int)rigidbody.velocity.magnitude);
+            animator.SetFloat("speed", rigidbody.velocity.magnitude);
     }
 }
