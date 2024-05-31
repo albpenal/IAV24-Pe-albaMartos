@@ -149,7 +149,7 @@ namespace UCM.IAV.Navegacion
         public override void Load()
         {
             if(mapName != "MapGeneration.map") LoadMap(mapName);
-            else GenerateMap(mapName, 15, 15, 10, 10); // Generata un mapa aleatorio de tamaño entre 10x10 y 15x15
+            else GenerateMap(mapName, 22, 15, 15); // Generata un mapa aleatorio de tamaño entre 10x10 y 15x15
         }
 
         protected void SetNeighbours(int x, int y, bool get8 = false)
@@ -331,7 +331,7 @@ namespace UCM.IAV.Navegacion
                 if (salidaSave()) exitOriginalPos = false;
             }
         }
-        private void GenerateMap(string filename, int maxWidth, int maxHeight, int minWidth, int minHeight)
+        private void GenerateMap(string filename, int maxWidth, int minWidth, int minHeight)
         {
             int j = 0, i = 0, id = 0;
             Vector3 position = Vector3.zero;
@@ -362,7 +362,7 @@ namespace UCM.IAV.Navegacion
                     else if(!((i == 1 && j == numCols - 2) || (j == 1 && i == numRows - 2))) // ni entrada ni salida
                     {
                         float perlinValue = Mathf.PerlinNoise((float)i / numRows * 5.0f, (float)j / numCols * 5.0f);
-                        if (perlinValue < 0.4f && haySalida(i, j))
+                        if (perlinValue < 0.3f && haySalida(i, j))
                         {
                             mapVertices[i, j] = false; // Obstáculo
                         }
