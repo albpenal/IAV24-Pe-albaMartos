@@ -6,16 +6,17 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
+using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UCM.IAV.Movimiento;
+using UnityEditor;
+using UnityEngine.UIElements;
+
 namespace UCM.IAV.Navegacion
 {
-
-    using UnityEngine;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using UCM.IAV.Movimiento;
-    using UnityEditor;
-
     public class GraphGrid : Graph
     {
         const int MAX_TRIES = 1000;
@@ -37,7 +38,6 @@ namespace UCM.IAV.Navegacion
         public float maximumCost = Mathf.Infinity;
         private Vector2 salida;
         private bool exitOriginalPos;
-
 
         GameObject[] vertexObjs;
 
@@ -63,7 +63,7 @@ namespace UCM.IAV.Navegacion
         private void LoadMap(string filename)
         {
             string path;
-            
+
             path = Application.dataPath + "/" + mapsDir + "/" + filename;
 
             try
@@ -101,7 +101,7 @@ namespace UCM.IAV.Navegacion
                             {
                                 GameManager.instance.SetExit(j, i, cellSize);
                                 salida = new Vector2(i, j);
-                            }   
+                            }
                             else if (line[j] == 's')
                                 GameManager.instance.SetStart(j, i, cellSize);
                             else if (line[j] == 'T')
@@ -129,7 +129,7 @@ namespace UCM.IAV.Navegacion
                             v.id = id;
                             vertices.Add(v);
                             neighbourVertex.Add(new List<Vertex>());
-                            
+
                             vertexObjs[id].transform.localScale *= cellSize;
                         }
                     }
@@ -148,7 +148,8 @@ namespace UCM.IAV.Navegacion
 
         public override void Load()
         {
-            LoadMap(mapName);
+            if(mapName != "MapGeneration.map") LoadMap(mapName);
+            else GenerateMap(mapName, 15, 15, 10, 10); // Generata un mapa aleatorio de tamaño entre 10x10 y 15x15
         }
 
         protected void SetNeighbours(int x, int y, bool get8 = false)
@@ -160,17 +161,21 @@ namespace UCM.IAV.Navegacion
             int vertexId = GridToId(x, y);
             neighbourVertex[vertexId] = new List<Vertex>();
             Vector2[] pos = new Vector2[0];
-            if (get8) {
+            if (get8)
+            {
                 pos = new Vector2[8];
                 int c = 0;
-                for (i = row - 1; i <= row + 1; i++) {
-                    for (j = col - 1; j <= col; j++) {
+                for (i = row - 1; i <= row + 1; i++)
+                {
+                    for (j = col - 1; j <= col; j++)
+                    {
                         pos[c] = new Vector2(j, i);
                         c++;
                     }
                 }
             }
-            else {
+            else
+            {
                 pos = new Vector2[4];
                 pos[0] = new Vector2(col, row - 1);
                 pos[1] = new Vector2(col - 1, row);
@@ -178,7 +183,8 @@ namespace UCM.IAV.Navegacion
                 pos[3] = new Vector2(col, row + 1);
             }
 
-            foreach (Vector2 p in pos) {
+            foreach (Vector2 p in pos)
+            {
                 i = (int)p.y;
                 j = (int)p.x;
 
@@ -196,8 +202,8 @@ namespace UCM.IAV.Navegacion
 
         public override Vertex GetNearestVertex(Vector3 position)
         {
-            int col = (int) Math.Round(position.x / cellSize);
-            int row = (int) Math.Round(position.z / cellSize);
+            int col = (int)Math.Round(position.x / cellSize);
+            int row = (int)Math.Round(position.z / cellSize);
             Vector2 p = new Vector2(col, row);
             List<Vector2> explored = new List<Vector2>();
             Queue<Vector2> queue = new Queue<Vector2>();
@@ -325,5 +331,173 @@ namespace UCM.IAV.Navegacion
                 if (salidaSave()) exitOriginalPos = false;
             }
         }
+        private void GenerateMap(string filename, int maxWidth, int maxHeight, int minWidth, int minHeight)
+        {
+            int j = 0, i = 0, id = 0;
+            Vector3 position = Vector3.zero;
+
+            int width = UnityEngine.Random.Range(minWidth, maxWidth + 1);
+            int height = UnityEngine.Random.Range(minHeight, maxHeight + 1);
+            numRows = height;
+            numCols = width;
+
+            vertices = new List<Vertex>(numRows * numCols);
+            neighbourVertex = new List<List<Vertex>>(numRows * numCols);
+            vertexObjs = new GameObject[numRows * numCols];
+            //delete(mapVertices);
+            mapVertices = new bool[numRows, numCols];
+            costsVertices = new float[numRows, numCols];
+
+            for (i = 0; i < height; i++)
+            {
+                for (j = 0; j < width; j++)
+                {
+                    if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
+                    {
+                        mapVertices[i, j] = false; // Bordes del mapa
+                    }
+                    else if (i == 1 && j == width - 2)
+                    {
+                        mapVertices[i, j] = true; // Entrada
+                        GameManager.instance.SetExit(j, i, cellSize);
+                        salida = new Vector2(i, j);
+                    }
+                    else if (j == 1 && i == height - 2)
+                    {
+                        mapVertices[i, j] = true; // Salida
+                        GameManager.instance.SetStart(j, i, cellSize);
+                    }
+                    else
+                    {
+                        if(haySalida(i, j))
+                        {
+                            float perlinValue = Mathf.PerlinNoise((float)j / width * 5.0f, (float)i / height * 5.0f);
+                            if (perlinValue < 0.4f)
+                            {
+                                mapVertices[i, j] = false; // Obstáculo
+                            }
+                            else
+                            {
+                                mapVertices[i, j] = true; // Suelo sin obstáculo
+                            }
+                        }
+                        else
+                        {
+                            mapVertices[i, j] = true; // Suelo sin obstáculo
+                        }
+                    }
+                }
+            }
+
+            //Generamos terreno
+            for (i = 0; i < numRows; i++)
+            {
+                for (j = 0; j < numCols; j++)
+                {
+                    position.x = j * cellSize;
+                    position.z = i * cellSize;
+                    id = GridToId(j, i);
+
+                    if (mapVertices[i, j])
+                        vertexObjs[id] = Instantiate(vertexPrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
+                    else
+                        vertexObjs[id] = WallInstantiate(position, i, j);
+
+                    vertexObjs[id].name = vertexObjs[id].name.Replace("(Clone)", id.ToString());
+                    Vertex v = vertexObjs[id].AddComponent<Vertex>();
+                    v.id = id;
+                    vertices.Add(v);
+                    neighbourVertex.Add(new List<Vertex>());
+
+                    vertexObjs[id].transform.localScale *= cellSize;
+                }
+            }
+
+            // Leemos vecinos
+            for (i = 0; i < numRows; i++)
+                for (j = 0; j < numCols; j++)
+                    SetNeighbours(j, i);
+
+            Debug.Log("Map generated and placed in mapVertices.");
+        }
+
+
+        private bool haySalida(int obstX, int obstY)
+        {
+            // Verificar que obstX y obstY están dentro de los límites de la matriz
+            if (obstY < 0 || obstY >= numRows || obstX < 0 || obstX >= numCols)
+            {
+                Debug.LogError($"Indices fuera de los límites: obstX={obstX}, obstY={obstY}");
+                return false;
+            }
+
+            // Guardar el estado actual del mapa
+            bool originalState = mapVertices[obstY, obstX];
+            mapVertices[obstY, obstX] = false; // Añadir obstáculo temporalmente
+
+            // Crear una cola para BFS
+            Queue<Vector2> queue = new Queue<Vector2>();
+            HashSet<Vector2> visited = new HashSet<Vector2>();
+
+            // Encontrar la posición de la entrada y la salida
+            Vector2 entrada = Vector2.zero;
+            Vector2 salida = Vector2.zero;
+
+            for (int i = 0; i < numRows; i++)
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    if (mapVertices[i, j])
+                    {
+                        if (i == 1 && j == numCols - 2)
+                        {
+                            entrada = new Vector2(j, i);
+                        }
+                        else if (i == numRows - 2 && j == 1)
+                        {
+                            salida = new Vector2(j, i);
+                        }
+                    }
+                }
+            }
+
+            // Inicializar BFS desde la entrada
+            queue.Enqueue(entrada);
+            visited.Add(entrada);
+
+            // Direcciones para moverse en 4 direcciones (arriba, derecha, abajo, izquierda)
+            Vector2[] directions = new Vector2[]
+            {
+        new Vector2(0, 1),
+        new Vector2(1, 0),
+        new Vector2(0, -1),
+        new Vector2(-1, 0)
+            };
+
+            while (queue.Count > 0)
+            {
+                Vector2 current = queue.Dequeue();
+                if (current == salida)
+                {
+                    mapVertices[obstY, obstX] = originalState;
+                    return true; // Hay camino a la salida
+                }
+
+                foreach (Vector2 dir in directions)
+                {
+                    Vector2 neighbor = current + dir;
+                    if (neighbor.x >= 0 && neighbor.x < numCols && neighbor.y >= 0 && neighbor.y < numRows &&
+                        mapVertices[(int)neighbor.y, (int)neighbor.x] && !visited.Contains(neighbor))
+                    {
+                        queue.Enqueue(neighbor);
+                        visited.Add(neighbor);
+                    }
+                }
+            }
+
+            mapVertices[obstY, obstX] = originalState;
+            return false; // No hay camino a la salida
+        }
+
     }
 }

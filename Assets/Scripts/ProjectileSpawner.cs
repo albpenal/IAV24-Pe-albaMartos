@@ -16,34 +16,34 @@ public class ProjectileSpawner : MonoBehaviour
     [SerializeField]
     private float spawnRadius = 2.0f; // Radio alrededor del primer proyectil
     [SerializeField]
-    private int maxAdditionalProjectiles = 4; // Máximo número de proyectiles adicionales
+    private int maxAdditionalProjectiles = 4; // Mï¿½ximo nï¿½mero de proyectiles adicionales
     [SerializeField]
     private int projectileHeight = 20; // Altura en la que hacen spawn los proyectiles
     [SerializeField]
-    private float cellSize = 1f; // Tamaño de las celdas en la cuadrícula
+    private float cellSize = 1f; // Tamaï¿½o de las celdas en la cuadrï¿½cula
     [SerializeField]
-    private float minSpawnInterval = 0.5f; // Intervalo mínimo de spawn
+    private float minSpawnInterval = 0.5f; // Intervalo mï¿½nimo de spawn
     [SerializeField]
-    private float maxSpawnInterval = 1.5f; // Intervalo máximo de spawn
+    private float maxSpawnInterval = 1.5f; // Intervalo mï¿½ximo de spawn
     [SerializeField]
-    private Transform[] cannons; // Transforms de los cañones en escena
+    private Transform[] cannons; // Transforms de los caï¿½ones en escena
 
     void SpawnProjectiles()
     {
         if (!GameManager.instance.gameOver)
             {
-            // Posición del primer proyectil con un pequeño offset hacia adelante
+            // Posiciï¿½n del primer proyectil con un pequeï¿½o offset hacia adelante
             Vector3 spawnPosition = player.transform.position + player.transform.forward * forwardOffset;
             spawnPosition.y += projectileHeight;
             spawnPosition = AdjustToGridCenter(spawnPosition);
             Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
 
-            // Número aleatorio de proyectiles adicionales
+            // Nï¿½mero aleatorio de proyectiles adicionales
             int additionalProjectiles = Random.Range(0, maxAdditionalProjectiles + 1);
 
             for (int i = 0; i < additionalProjectiles; i++)
             {
-                // Posición aleatoria alrededor del primer proyectil
+                // Posiciï¿½n aleatoria alrededor del primer proyectil
                 Vector3 randomOffset = Random.insideUnitSphere * spawnRadius;
                 randomOffset.y = 0; // Mantener los proyectiles en el plano horizontal
                 Vector3 additionalSpawnPosition = spawnPosition + randomOffset;
