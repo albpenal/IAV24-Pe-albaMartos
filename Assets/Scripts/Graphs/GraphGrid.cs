@@ -337,7 +337,7 @@ namespace UCM.IAV.Navegacion
             Vector3 position = Vector3.zero;
 
             int width = UnityEngine.Random.Range(minWidth, maxWidth + 1);
-            int height = UnityEngine.Random.Range(minHeight, maxHeight + 1);
+            int height = UnityEngine.Random.Range(minHeight, width + 1);
             numRows = height;
             numCols = width;
 
@@ -346,39 +346,25 @@ namespace UCM.IAV.Navegacion
             vertexObjs = new GameObject[numRows * numCols];
             //delete(mapVertices);
             mapVertices = new bool[numRows, numCols];
+            for (i = 0; i < numRows; i++) { for (j = 0; j < numCols; j++) { mapVertices[i, j] = true; } }
             costsVertices = new float[numRows, numCols];
-            GameManager.instance.SetStart(height - 2, 1, cellSize);
-            GameManager.instance.SetExit(1, width - 2, cellSize);
+            GameManager.instance.SetStart(numCols - 2, 1, cellSize);
+            GameManager.instance.SetExit(1, numRows - 2, cellSize);
 
-            for (i = 0; i < height; i++)
+            for (i = 0; i < numRows; i++)
             {
-                for (j = 0; j < width; j++)
+                for (j = 0; j < numCols; j++)
                 {
-                    if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
+                    if (i == 0 || i == numRows - 1 || j == 0 || j == numCols - 1)
                     {
                         mapVertices[i, j] = false; // Bordes del mapa
                     }
-                    else if ((i == 1 && j == width - 2)||(j == 1 && i == height - 2)) 
+                    else if(!((i == 1 && j == numCols - 2) || (j == 1 && i == numRows - 2))) // ni entrada ni salida
                     {
-                        mapVertices[i, j] = true; // entrada y salida
-                    }
-                    else
-                    {
-                        if(haySalida(i, j))
+                        float perlinValue = Mathf.PerlinNoise((float)i / numRows * 5.0f, (float)j / numCols * 5.0f);
+                        if (perlinValue < 0.4f && haySalida(i, j))
                         {
-                            float perlinValue = Mathf.PerlinNoise((float)j / width * 5.0f, (float)i / height * 5.0f);
-                            if (perlinValue < 0.4f)
-                            {
-                                mapVertices[i, j] = false; // Obstáculo
-                            }
-                            else
-                            {
-                                mapVertices[i, j] = true; // Suelo sin obstáculo
-                            }
-                        }
-                        else
-                        {
-                            mapVertices[i, j] = true; // Suelo sin obstáculo
+                            mapVertices[i, j] = false; // Obstáculo
                         }
                     }
                 }
@@ -419,14 +405,14 @@ namespace UCM.IAV.Navegacion
 
         private bool haySalida(int obstX, int obstY)
         {
-            if (obstY < 0 || obstY >= numRows || obstX < 0 || obstX >= numCols)
+            if (obstY < 0 || obstY >= numCols || obstX < 0 || obstX >= numRows)
             {
                 Debug.LogError($"Indices fuera de los límites: obstX={obstX}, obstY={obstY}");
                 return false;
             }
 
-            bool originalState = mapVertices[obstY, obstX];
-            mapVertices[obstY, obstX] = false; // Añadir obstáculo temporalmente
+            bool originalState = mapVertices[obstX, obstY];
+            mapVertices[obstX, obstY] = false; // Añadir obstáculo temporalmente
 
             // Crear una cola para BFS
             Queue<Vector2> queue = new Queue<Vector2>();
@@ -454,23 +440,24 @@ namespace UCM.IAV.Navegacion
                 Vector2 current = queue.Dequeue();
                 if (current == salida)
                 {
-                    mapVertices[obstY, obstX] = originalState;
+                    mapVertices[obstX, obstY] = originalState;
+                    //Debug.Log("saalida");
                     return true; // Hay camino a la salida
                 }
 
                 foreach (Vector2 dir in directions)
                 {
-                    Vector2 neighbor = current + dir;
-                    if (neighbor.x >= 0 && neighbor.x < numCols && neighbor.y >= 0 && neighbor.y < numRows &&
-                        mapVertices[(int)neighbor.y, (int)neighbor.x] && !visited.Contains(neighbor))
+                    Vector2 neigh = current + dir;
+                    if (neigh.x >= 0 && neigh.x < numRows && neigh.y >= 0 && neigh.y < numCols &&
+                        mapVertices[(int)neigh.x, (int)neigh.y] && !visited.Contains(neigh))
                     {
-                        queue.Enqueue(neighbor);
-                        visited.Add(neighbor);
+                        queue.Enqueue(neigh);
+                        visited.Add(neigh);
                     }
                 }
             }
 
-            mapVertices[obstY, obstX] = originalState;
+            mapVertices[obstX, obstY] = originalState;
             return false; // No hay camino a la salida
         }
 
