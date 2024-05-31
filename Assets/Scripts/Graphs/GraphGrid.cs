@@ -252,15 +252,16 @@ namespace UCM.IAV.Navegacion
         public override void UpdateVertexCost(Vector3 position, float costMultiplier)
         {
             Vertex v = GetNearestVertex(position);
+            if (v != null)
+            {
+                Vector2 gridPos = IdToGrid(v.id);
 
-            Vector2 gridPos = IdToGrid(v.id);
+                int x = (int)gridPos.y;
+                int y = (int)gridPos.x;
 
-            int x = (int)gridPos.y;
-            int y = (int)gridPos.x;
-
-            if (x > 0 && x < numRows - 1 && y > 0 && y < numCols - 1)
-                costsVertices[x, y] += costMultiplier;
-
+                if (x > 0 && x < numRows - 1 && y > 0 && y < numCols - 1)
+                    costsVertices[x, y] += costMultiplier;
+            }
         }
 
         public int getVertexCost(Vector3 position)

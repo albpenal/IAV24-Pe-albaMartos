@@ -8,6 +8,8 @@ public class ProjectileSpawner : MonoBehaviour
     [SerializeField]
     private GameObject projectilePrefab; // Prefab del proyectil a spawnear
     [SerializeField]
+    private GameObject fakeProjectilePrefab; // Prefab del proyectil a spawnear
+    [SerializeField]
     private GameObject player; // Referencia al player
     [SerializeField]
     public float forwardOffset = 1.0f; // Offset hacia adelante
@@ -23,15 +25,8 @@ public class ProjectileSpawner : MonoBehaviour
     private float minSpawnInterval = 0.5f; // Intervalo mínimo de spawn
     [SerializeField]
     private float maxSpawnInterval = 1.5f; // Intervalo máximo de spawn
-
-    //void Update()
-    //{
-    //    // Spawnear proyectil al presionar la tecla espacio
-    //    if (Input.GetKeyDown(KeyCode.LeftShift))
-    //    {
-    //        SpawnProjectiles();
-    //    }
-    //}
+    [SerializeField]
+    private Transform[] cannons; // Transforms de los cañones en escena
 
     void SpawnProjectiles()
     {
@@ -54,6 +49,12 @@ public class ProjectileSpawner : MonoBehaviour
                 Vector3 additionalSpawnPosition = spawnPosition + randomOffset;
                 additionalSpawnPosition = AdjustToGridCenter(additionalSpawnPosition);
                 Instantiate(projectilePrefab, additionalSpawnPosition, Quaternion.identity);
+            }
+            for(int i = 0; i < additionalProjectiles + 1; i++)
+            {
+                GameObject projectile = Instantiate(fakeProjectilePrefab, cannons[i].position, Quaternion.identity);
+                Rigidbody rb = projectile.GetComponent<Rigidbody>();
+                rb.velocity = new Vector3(0, 60, 1);
             }
         }
     }
