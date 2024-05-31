@@ -359,13 +359,13 @@ namespace UCM.IAV.Navegacion
                     else if (i == 1 && j == width - 2)
                     {
                         mapVertices[i, j] = true; // Entrada
-                        GameManager.instance.SetExit(j, i, cellSize);
+                        GameManager.instance.SetExit(i, j, cellSize);
                         salida = new Vector2(i, j);
                     }
                     else if (j == 1 && i == height - 2)
                     {
                         mapVertices[i, j] = true; // Salida
-                        GameManager.instance.SetStart(j, i, cellSize);
+                        GameManager.instance.SetStart(i, j, cellSize);
                     }
                     else
                     {
@@ -424,14 +424,12 @@ namespace UCM.IAV.Navegacion
 
         private bool haySalida(int obstX, int obstY)
         {
-            // Verificar que obstX y obstY están dentro de los límites de la matriz
             if (obstY < 0 || obstY >= numRows || obstX < 0 || obstX >= numCols)
             {
                 Debug.LogError($"Indices fuera de los límites: obstX={obstX}, obstY={obstY}");
                 return false;
             }
 
-            // Guardar el estado actual del mapa
             bool originalState = mapVertices[obstY, obstX];
             mapVertices[obstY, obstX] = false; // Añadir obstáculo temporalmente
 
@@ -468,10 +466,10 @@ namespace UCM.IAV.Navegacion
             // Direcciones para moverse en 4 direcciones (arriba, derecha, abajo, izquierda)
             Vector2[] directions = new Vector2[]
             {
-        new Vector2(0, 1),
-        new Vector2(1, 0),
-        new Vector2(0, -1),
-        new Vector2(-1, 0)
+                new Vector2(0, 1),
+                new Vector2(1, 0),
+                new Vector2(0, -1),
+                new Vector2(-1, 0)
             };
 
             while (queue.Count > 0)
