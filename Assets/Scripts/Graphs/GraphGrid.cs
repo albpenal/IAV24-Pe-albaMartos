@@ -347,6 +347,8 @@ namespace UCM.IAV.Navegacion
             //delete(mapVertices);
             mapVertices = new bool[numRows, numCols];
             costsVertices = new float[numRows, numCols];
+            GameManager.instance.SetStart(height - 2, 1, cellSize);
+            GameManager.instance.SetExit(1, width - 2, cellSize);
 
             for (i = 0; i < height; i++)
             {
@@ -356,16 +358,9 @@ namespace UCM.IAV.Navegacion
                     {
                         mapVertices[i, j] = false; // Bordes del mapa
                     }
-                    else if (i == 1 && j == width - 2)
+                    else if ((i == 1 && j == width - 2)||(j == 1 && i == height - 2)) 
                     {
-                        mapVertices[i, j] = true; // Entrada
-                        GameManager.instance.SetExit(i, j, cellSize);
-                        salida = new Vector2(i, j);
-                    }
-                    else if (j == 1 && i == height - 2)
-                    {
-                        mapVertices[i, j] = true; // Salida
-                        GameManager.instance.SetStart(i, j, cellSize);
+                        mapVertices[i, j] = true; // entrada y salida
                     }
                     else
                     {
@@ -438,26 +433,8 @@ namespace UCM.IAV.Navegacion
             HashSet<Vector2> visited = new HashSet<Vector2>();
 
             // Encontrar la posición de la entrada y la salida
-            Vector2 entrada = Vector2.zero;
-            Vector2 salida = Vector2.zero;
-
-            for (int i = 0; i < numRows; i++)
-            {
-                for (int j = 0; j < numCols; j++)
-                {
-                    if (mapVertices[i, j])
-                    {
-                        if (i == 1 && j == numCols - 2)
-                        {
-                            entrada = new Vector2(j, i);
-                        }
-                        else if (i == numRows - 2 && j == 1)
-                        {
-                            salida = new Vector2(j, i);
-                        }
-                    }
-                }
-            }
+            Vector2 entrada = new Vector2(numRows - 2, 1);
+            Vector2 salida = new Vector2(1, numCols -2);
 
             // Inicializar BFS desde la entrada
             queue.Enqueue(entrada);
